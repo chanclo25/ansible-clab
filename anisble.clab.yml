@@ -1,0 +1,119 @@
+name: lab1 
+
+topology: 
+  kinds: 
+    arista_ceos:
+      image: ceos:4.36.1F
+
+  nodes:
+    ISP1:
+      kind: arista_ceos
+    R1:
+      kind: arista_ceos
+    C1: 
+      kind: arista_ceos
+    C2:
+      kind: arista_ceos
+    DA1:
+      kind: arista_ceos
+    DA2: 
+      kind: arista_ceos
+    DB1: 
+      kind: arista_ceos
+    DB2:
+      kind: arista_ceos
+    AA1:
+      kind: arista_ceos
+    AA2:
+      kind: arista_ceos
+    AA3:
+      kind: arista_ceos
+    AB1:
+      kind: arista_ceos
+    AB2:
+      kind: arista_ceos
+    AB3:
+      kind: arista_ceos
+    PC1:
+      kind: linux
+      image: wbitt/network-multitool
+      exec:
+        - touch "ip addr add 192.168.10.10/24 dev eth1" >> config.txt
+    PC2:
+      kind: linux
+      image: wbitt/network-multitool
+      exec:
+        - touch "ip addr add 192.168.10.10/24 dev eth1" >> config.txt
+    PC3:
+      kind: linux
+      image: wbitt/network-multitool
+      exec:
+        - touch "ip addr add 192.168.10.10/24 dev eth1" >> config.txt
+    PC4:
+      kind: linux
+      image: wbitt/network-multitool
+      exec:
+        - touch "ip addr add 192.168.10.10/24 dev eth1" >> config.txt
+    PC5:
+      kind: linux
+      image: wbitt/network-multitool
+      exec:
+        - touch "ip addr add 192.168.10.10/24 dev eth1" >> config.txt
+    PC6:
+      kind: linux
+      image: wbitt/network-multitool
+      exec:
+        - touch "ip addr add 192.168.10.10/24 dev eth1" >> config.txt
+  links:
+    # ISP to edge router
+    - endpoints: ["ISP1:eth1", "R1:eth1"]
+
+    # R1 to both cores
+    - endpoints: ["R1:eth2", "C1:eth1"]
+    - endpoints: ["R1:eth3", "C2:eth1"]
+
+    # C1 to C2 LACP port-channel member links
+    - endpoints: ["C1:eth2", "C2:eth2"]
+    - endpoints: ["C1:eth3", "C2:eth3"]
+
+    # Distribution A to each core
+    - endpoints: ["DA1:eth1", "C1:eth4"]
+    - endpoints: ["DA1:eth2", "C2:eth4"]
+    - endpoints: ["DA2:eth1", "C1:eth5"]
+    - endpoints: ["DA2:eth2", "C2:eth5"]
+
+    # Distribution B to each core
+    - endpoints: ["DB1:eth1", "C1:eth6"]
+    - endpoints: ["DB1:eth2", "C2:eth6"]
+    - endpoints: ["DB2:eth1", "C1:eth7"]
+    - endpoints: ["DB2:eth2", "C2:eth7"]
+
+    # Two links between distribution pairs
+    - endpoints: ["DA1:eth3", "DA2:eth3"]
+    - endpoints: ["DA1:eth4", "DA2:eth4"]
+    - endpoints: ["DB1:eth3", "DB2:eth3"]
+    - endpoints: ["DB1:eth4", "DB2:eth4"]
+
+    # Access A switches to both DA distribution switches
+    - endpoints: ["AA1:eth1", "DA1:eth5"]
+    - endpoints: ["AA1:eth2", "DA2:eth5"]
+    - endpoints: ["AA2:eth1", "DA1:eth6"]
+    - endpoints: ["AA2:eth2", "DA2:eth6"]
+    - endpoints: ["AA3:eth1", "DA1:eth7"]
+    - endpoints: ["AA3:eth2", "DA2:eth7"]
+
+    # Access B switches to both DB distribution switches
+    - endpoints: ["AB1:eth1", "DB1:eth5"]
+    - endpoints: ["AB1:eth2", "DB2:eth5"]
+    - endpoints: ["AB2:eth1", "DB1:eth6"]
+    - endpoints: ["AB2:eth2", "DB2:eth6"]
+    - endpoints: ["AB3:eth1", "DB1:eth7"]
+    - endpoints: ["AB3:eth2", "DB2:eth7"]
+
+    # PCs to access switches
+    - endpoints: ["PC1:eth1", "AA1:eth3"]
+    - endpoints: ["PC2:eth1", "AA2:eth3"]
+    - endpoints: ["PC3:eth1", "AA3:eth3"]
+    - endpoints: ["PC4:eth1", "AB1:eth3"]
+    - endpoints: ["PC5:eth1", "AB2:eth3"]
+    - endpoints: ["PC6:eth1", "AB3:eth3"]
