@@ -1,0 +1,16 @@
+# Containerlab runtime
+clab-*/
+
+# cEOS flash
+**/flash/
+
+# Logs
+*.log
+
+# SSH keys
+authorized_keys
+
+# Generated inventories
+ansible-inventory.yml
+nornir-simple-inventory.yml
+topology-data.json

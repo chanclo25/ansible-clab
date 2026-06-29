@@ -1,0 +1,20 @@
+- name: Configure trunk ports using LLDP
+  hosts: arista_ceos
+  gather_facts: false
+
+  tasks:
+  - name: Get LLDP neighbor details
+    arista.eos.eos_command:
+      commands:
+        - show lldp neighbors detail | json
+    register: lldp_data
+
+  - name: Dry run trunk ports
+    debug:
+      msg: "Would configure trunk on {{ inventory_hostname }} {{ item.key }} toward {{ item.value.lldpNeighborInfo[0].systemName }}"
+    loop: "{{ lldp_data.stdout[0].lldpNeighbors | dict2items }}"
+    when:
+      - item.key.startswith("Ethernet")
+      - item.value.lldpNeighborInfo is defined
+      - item.value.lldpNeighborInfo | length > 0
+      - item.value.lldpNeighborInfo[0].systemName is match("^(C|D|A|R|ISP)")
